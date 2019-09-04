@@ -63,13 +63,8 @@ def initialize():
     return course
 
 def get_course_information(browser):
-    print('========== get course information ==========')
-
     browser.switch_to.frame(browser.find_element_by_tag_name('iframe'))
     browser.switch_to.frame(browser.find_element_by_name('mainFrame'))
-    browser.implicitly_wait(30)
-
-    print(browser.find_element_by_id('M_COSID').text)
 
     course = initialize()
     # basic information
@@ -113,9 +108,10 @@ def get_course_information(browser):
     course['課程綱要']['evaluation']['english'] = browser.find_element_by_id('M_ENG_TYPE').text
     course['課程綱要']['reference_link'] = browser.find_element_by_id('M_DOWNLOAD_ADDR').text
 
-    browser.find_element_by_id('Button1').click()
+    browser.switch_to.parent_frame()
+    browser.switch_to.parent_frame()
 
-    browser.switch_to.parent_frame()
-    browser.switch_to.parent_frame()
+    browser.execute_script('top.mainFrame.$.fancybox.close()')
+    time.sleep(0.5)
 
     return course
