@@ -34,7 +34,7 @@ def get_courses(browser):
         print(option)
         Select(browser.find_element_by_id('Q_FACULTY_CODE')).select_by_value(option)
         browser.find_element_by_id('QUERY_BTN1').click()
-        time.sleep(1)
+        time.sleep(2)
         # judge display row amount
         total_row = int(browser.find_element_by_id('PC_TotalRow').text)
         if total_row == 0:
