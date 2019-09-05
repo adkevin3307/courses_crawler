@@ -9,4 +9,7 @@ Try to get all courses in NTOuO.
 
 # Quick Start
 * `python3 courses.py`
-* input account and password
+* Input account and password.
+
+# Result
+Program will auto generate `courses.json`.
