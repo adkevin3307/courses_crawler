@@ -35,7 +35,7 @@ def initialize():
             },
             'pre_course': {
                 'chinese': '',
-                'englist': ''
+                'english': ''
             },
             'outline': {
                 'chinese': '',
@@ -89,6 +89,9 @@ def get_course_information(browser):
     course['basic_information']['選課人數'] = int(browser.find_element_by_id('M_CHOICE_QTY').text)
     course['basic_information']['description'] = browser.find_element_by_id('M_DESCRIPTION').text
     course['basic_information']['co_professors'] = browser.find_element_by_id('TCH_NAME_LIST').text.split(',')
+    # remove ' ' in co-professors list
+    while ' ' in course['basic_information']['co_professors']:
+        course['basic_information']['co_professors'].remove(' ')
     # core ability
     course['core_ability'] = browser.find_element_by_id('L_CORE_ABILITY').text
     # 課程綱要
