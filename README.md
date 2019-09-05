@@ -1,4 +1,4 @@
-# school courses
+# School courses
 Try to get all courses in NTOuO.
 
 # Enviroment
