@@ -18,9 +18,9 @@ def select_menu(browser):
     browser.switch_to.frame(browser.find_element_by_name('menuFrame'))
     browser.implicitly_wait(30)
 
-    browser.find_element_by_id("Menu_TreeViewt1").click() # 教學務系統
-    browser.find_element_by_id('Menu_TreeViewt25').click() # 選課系統
-    browser.find_element_by_id('Menu_TreeViewt34').click() # 課程課表查詢
+    browser.find_element_by_id("Menu_TreeViewt1").click()
+    browser.find_element_by_id('Menu_TreeViewt25').click()
+    browser.find_element_by_id('Menu_TreeViewt34').click()
 
 def get_courses(browser):
     print('========== get courses ==========')
@@ -33,7 +33,7 @@ def get_courses(browser):
     for i, option in enumerate(options):
         select = Select(browser.find_element_by_id('Q_FACULTY_CODE'))
         select.select_by_value(option)
-        # show current faculty
+
         print('{} / {}: {}'.format(i + 1, len(options), select.first_selected_option.text))
         # click button and wait for render
         browser.find_element_by_id('QUERY_BTN1').click()
@@ -41,7 +41,7 @@ def get_courses(browser):
         # check total row amount
         total_row = int(browser.find_element_by_id('PC_TotalRow').text)
         if total_row != 0:
-            # judge display row
+            # adjust display row
             if i == 0:
                 browser.execute_script('$("#PC_PageSize").attr("value", 1000)')
                 browser.find_element_by_id('PC_ShowRows').send_keys(Keys.ENTER)
@@ -49,8 +49,10 @@ def get_courses(browser):
             # get per course information
             for course_id in tqdm.tqdm(range(2, 2 + total_row)):
                 course_id = str(course_id) if course_id >= 10 else ('0' + str(course_id))
-                browser.execute_script('__doPostBack("DataGrid$ctl{}$COSID", "")'.format(course_id))
+                browser.execute_script('__doPostBack("DataGrid$ctl{}$COSID", "")'.format(course_id)) # open fancybox
                 courses.append(course_information.get_course_information(browser))
+                browser.execute_script('top.mainFrame.$.fancybox.close()') # close fancybox
+                time.sleep(0.5)
     return courses
 
 if __name__ == '__main__':
