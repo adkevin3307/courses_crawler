@@ -8,7 +8,7 @@ Try to get all courses in NTOuO.
 * chromedriver 75.0.3770.8 (on Windows)
 
 # Quick Start
-* `python3 courses.py`
+* `python3 courses_crawler.py`
 * Input account and password.
 
 # Result
