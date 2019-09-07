@@ -65,7 +65,9 @@ def processing_course_information(course):
     while ' ' in course['basic_information']['co_professors']:
         course['basic_information']['co_professors'].remove(' ')
 
-def get_course_information(browser):
+def get_course_information(browser, course_id):
+    browser.execute_script('__doPostBack("DataGrid$ctl{}$COSID", "")'.format(course_id)) # open fancybox
+
     browser.switch_to.frame(browser.find_element_by_tag_name('iframe'))
     browser.switch_to.frame(browser.find_element_by_name('mainFrame'))
 
@@ -113,6 +115,8 @@ def get_course_information(browser):
 
     browser.switch_to.parent_frame()
     browser.switch_to.parent_frame()
+
+    browser.execute_script('top.mainFrame.$.fancybox.close()') # close fancybox
 
     processing_course_information(course)
 

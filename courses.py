@@ -1,26 +1,11 @@
 import json
 import time
 import tqdm
-import getpass
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 import course_information
-
-def login(browser, data):
-    browser.get('https://ais.ntou.edu.tw/Default.aspx')
-    browser.find_element_by_name('M_PORTAL_LOGIN_ACNT').send_keys(data['account'])
-    browser.find_element_by_name('M_PW').send_keys(data['password'])
-    browser.find_element_by_name('LGOIN_BTN').click()
-
-def select_menu(browser):
-    browser.switch_to.frame(browser.find_element_by_name('menuFrame'))
-    browser.implicitly_wait(30)
-
-    browser.find_element_by_id("Menu_TreeViewt1").click()
-    browser.find_element_by_id('Menu_TreeViewt25').click()
-    browser.find_element_by_id('Menu_TreeViewt34').click()
 
 def get_courses(browser):
     print('========== get courses ==========')
@@ -31,9 +16,9 @@ def get_courses(browser):
 
     options = list(map(lambda x: x.get_attribute('value'), Select(browser.find_element_by_id('Q_FACULTY_CODE')).options))
     for i, option in enumerate(options):
+        # select and print current faculty
         select = Select(browser.find_element_by_id('Q_FACULTY_CODE'))
         select.select_by_value(option)
-
         print('{} / {}: {}'.format(i + 1, len(options), select.first_selected_option.text))
         # click button and wait for render
         browser.find_element_by_id('QUERY_BTN1').click()
@@ -49,24 +34,13 @@ def get_courses(browser):
             # get per course information
             for course_id in tqdm.tqdm(range(2, 2 + total_row)):
                 course_id = str(course_id) if course_id >= 10 else ('0' + str(course_id))
-                browser.execute_script('__doPostBack("DataGrid$ctl{}$COSID", "")'.format(course_id)) # open fancybox
-                courses.append(course_information.get_course_information(browser))
-                browser.execute_script('top.mainFrame.$.fancybox.close()') # close fancybox
-                time.sleep(0.5)
+                courses.append(course_information.get_course_information(browser, course_id))
+                time.sleep(1)
     return courses
 
 if __name__ == '__main__':
-    courses = []
-    account = input('Account: ')
-    password = getpass.getpass()
-
     with webdriver.Chrome() as browser:
-        login(browser, {'account': account, 'password': password})
-
-        browser.get("https://ais.ntou.edu.tw/MainFrame.aspx")
-
-        select_menu(browser)
-        browser.switch_to.default_content()
+        browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         courses = get_courses(browser)
 
     with open('courses.json', 'w') as file:
