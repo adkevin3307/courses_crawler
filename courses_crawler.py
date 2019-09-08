@@ -95,5 +95,5 @@ if __name__ == '__main__':
     for i in range(browser_amount):
         threads[i].join()
     # dump to courses.json
-    with open('courses.json', 'w') as file:
+    with open('courses.json', 'w', encoding = 'utf8') as file:
         json.dump(courses, file, ensure_ascii = False, indent = 4, default = lambda x: x.__dict__)
