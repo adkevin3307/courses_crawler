@@ -4,7 +4,7 @@ Try to get all courses in NTOuO.
 # Enviroment
 * Python 3.7.3
 * selenium 3.141.0
-* chromedriver 75.0.3770.8 (on Windows)
+* chromedriver with current version
 
 # Quick Start
 * `python3 courses_crawler.py`
