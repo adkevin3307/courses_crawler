@@ -7,6 +7,7 @@ Try to get all courses in NTOuO.
 * chromedriver with current version
 
 # Quick Start
+* Run `pipenv shell`
 * `python3 courses_crawler.py`
 * Input amount of browsers.
 
