@@ -55,6 +55,7 @@ def parrallel(courses, selections):
     print('=============== {} Start ==============='.format(thread_name))
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--headless')
     with webdriver.Chrome(options = options) as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         courses.extend(get_courses(browser, selections, thread_name))
@@ -65,6 +66,7 @@ def get_selections(browser_amount):
     # set chrome options
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--headless')
     # get selections
     with webdriver.Chrome(options = options) as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
