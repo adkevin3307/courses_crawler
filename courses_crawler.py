@@ -33,21 +33,21 @@ def get_courses(browser, selections, thread_name):
             for row in range(2, 2 + total_rows):
                 # open fancybox
                 browser.find_element_by_id('DataGrid_ctl{:02d}_COSID'.format(row)).click()
-                time.sleep(2)
+                time.sleep(3)
                 # mainFrame(outer) -> iframe -> mainFrame(inner)
                 browser.switch_to.frame(browser.find_element_by_tag_name('iframe'))
                 browser.switch_to.frame(browser.find_element_by_name('mainFrame'))
-                time.sleep(1)
+                time.sleep(2)
                 # initialize Course and get information
                 courses.append(Course().get_information(browser))
                 time.sleep(1)
                 # mainFrame(inner) -> iframe -> mainFrame(outer)
                 browser.switch_to.parent_frame()
                 browser.switch_to.parent_frame()
-                time.sleep(1)
+                time.sleep(2)
                 # close fancybox
                 browser.execute_script('top.mainFrame.$.fancybox.close()')
-                time.sleep(2)
+                time.sleep(3)
     return courses
 
 def parrallel(courses, selections):
@@ -56,7 +56,7 @@ def parrallel(courses, selections):
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('--headless')
-    with webdriver.Chrome(options = options) as browser:
+    with webdriver.Chrome(options = options, executable_path = '/home/adkevin3307/courses_crawler/chromedriver') as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         courses.extend(get_courses(browser, selections, thread_name))
     print('=============== {} Done ==============='.format(thread_name))
@@ -68,7 +68,7 @@ def get_selections(browser_amount):
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('--headless')
     # get selections
-    with webdriver.Chrome(options = options) as browser:
+    with webdriver.Chrome(options = options, executable_path = '/home/adkevin3307/courses_crawler/chromedriver') as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         print('=============== get selections ===============')
         browser.switch_to.frame(browser.find_element_by_name('mainFrame'))
