@@ -1,5 +1,6 @@
 import json
 import time
+import logging
 import threading
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -23,6 +24,7 @@ def get_courses(browser, selections, thread_name):
         # check total row amount
         total_rows = int(browser.find_element_by_id('PC_TotalRow').text)
         print('{}: {} / {}, {}, {} rows'.format(thread_name, i + 1, len(selections), faculty_name, total_rows))
+        logging.info('{}: {} / {}, {}, {} rows'.format(thread_name, i + 1, len(selections), faculty_name, total_rows))
         if total_rows != 0:
             # set display rows to 1000
             if int(browser.find_element_by_id('PC_PageSize').get_attribute('value')) < total_rows + 1:
@@ -53,13 +55,15 @@ def get_courses(browser, selections, thread_name):
 def parrallel(courses, selections):
     thread_name = threading.current_thread().getName()
     print('=============== {} Start ==============='.format(thread_name))
+    logging.info('=============== {} Start ==============='.format(thread_name))
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('--headless')
-    with webdriver.Chrome(options = options, executable_path = '/home/adkevin3307/courses_crawler/chromedriver') as browser:
+    with webdriver.Chrome(options = options) as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         courses.extend(get_courses(browser, selections, thread_name))
     print('=============== {} Done ==============='.format(thread_name))
+    logging.info('=============== {} Done ==============='.format(thread_name))
 
 def get_selections(browser_amount):
     selections = []
@@ -68,9 +72,10 @@ def get_selections(browser_amount):
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('--headless')
     # get selections
-    with webdriver.Chrome(options = options, executable_path = '/home/adkevin3307/courses_crawler/chromedriver') as browser:
+    with webdriver.Chrome(options = options) as browser:
         browser.get('https://ais.ntou.edu.tw/outside.aspx?mainPage=LwBBAHAAcABsAGkAYwBhAHQAaQBvAG4ALwBUAEsARQAvAFQASwBFADIAMgAvAFQASwBFADIAMgAxADEAXwAuAGEAcwBwAHgAPwBwAHIAbwBnAGMAZAA9AFQASwBFADIAMgAxADEA')
         print('=============== get selections ===============')
+        logging.info('=============== get selections ===============')
         browser.switch_to.frame(browser.find_element_by_name('mainFrame'))
         browser.implicitly_wait(30)
         all_selections = list(map(lambda x: x.get_attribute('value'), Select(browser.find_element_by_id('Q_FACULTY_CODE')).options))
@@ -83,6 +88,7 @@ def get_selections(browser_amount):
     # print selections
     for i, selection in enumerate(selections):
         print('Thread {}: {}'.format(i + 1, selection))
+        logging.info('Thread {}: {}'.format(i + 1, selection))
     return selections
 
 if __name__ == '__main__':
@@ -90,11 +96,13 @@ if __name__ == '__main__':
     courses = []
     threads = []
     browser_amount = int(input('Amount of Browsers: '))
+    logging.basicConfig(filename = 'debug.log', level = logging.INFO)
     # start time
     start = time.time()
     selections = get_selections(browser_amount)
     # get courses
     print('=============== get courses ===============')
+    logging.info('=============== get courses ===============')
     for i in range(browser_amount):
         threads.append(threading.Thread(target = parrallel, args = (courses, selections[i]), name = 'Thread {}'.format(i + 1)))
         threads[i].start()
